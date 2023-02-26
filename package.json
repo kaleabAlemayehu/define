@@ -1,0 +1,11 @@
+{
+  "name": "define",
+  "version": "1.0.0",
+  "description": "cli tool to find a definitions of the word form the argument",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "cipher",
+  "license": "ISC"
+}
