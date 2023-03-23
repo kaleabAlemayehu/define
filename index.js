@@ -2,22 +2,29 @@ import axios from "axios";
 import fs from "fs";
 import dotenv from "dotenv";
 import path from "path";
-// import { Antonym } from "./fields";
+import { printDef } from "./display.js";
 import { Definition, Synonym, Antonym } from "./fields.js";
 
 dotenv.config();
 
 const word = process.argv[2];
+const NUM = parseInt(process.argv[3]) || 1;
 
 const urlDic = `https://www.dictionaryapi.com/api/v3/references/collegiate/json/${word}?key=${process.env.DIC}`;
 const urlThe = `https://www.dictionaryapi.com/api/v3/references/thesaurus/json/${word}?key=${process.env.THE}`;
-(async (urlDic, urlThe) => {
+
+// IIFE called when the command is executed
+(async (urlDic, urlThe, printDef) => {
   try {
     const responseDif = await axios.get(urlDic);
     const responseThe = await axios.get(urlThe);
 
     responseDif.data.forEach((element, index) => {
-      // const shortDefinition = new Definition(element.fl, element.shortdef);
+      if (index < NUM && NUM >= 0) {
+        const shortDefinition = new Definition(element.fl, element.shortdef);
+        printDef(shortDefinition);
+      }
+
       // console.log(`the short definition: ${JSON.stringify(shortDefinition)}`);
       //   fs.writeFile(
       //     `${path.resolve("./")}/define${index}.json`,
@@ -30,9 +37,10 @@ const urlThe = `https://www.dictionaryapi.com/api/v3/references/thesaurus/json/$
       //   );
     });
     responseThe.data.forEach((element, index) => {
-      const synon = new Synonym(JSON.stringify(element.meta.syns));
-      // console.log(...element.meta.syns);
-      console.log(`The synon are: ${synon}`);
+      if (index < NUM && NUM >= 0) {
+        const synon = new Synonym(JSON.stringify(element.meta.syns));
+        const anton = new Antonym(JSON.stringify(element.meta.ants));
+      }
       // fs.writeFile(
       //   `${path.resolve("./")}/syns${index}.json`,
       //   JSON.stringify(...element.meta.syns),
@@ -46,4 +54,4 @@ const urlThe = `https://www.dictionaryapi.com/api/v3/references/thesaurus/json/$
   } catch (e) {
     console.error(e);
   }
-})(urlDic, urlThe);
+})(urlDic, urlThe, printDef);
