@@ -2,7 +2,7 @@ import axios from "axios";
 import fs from "fs";
 import dotenv from "dotenv";
 import path from "path";
-import { printDef } from "./display.js";
+import { printAnton, printDef, printSynon } from "./display.js";
 import { Definition, Synonym, Antonym } from "./fields.js";
 
 dotenv.config();
@@ -14,7 +14,7 @@ const urlDic = `https://www.dictionaryapi.com/api/v3/references/collegiate/json/
 const urlThe = `https://www.dictionaryapi.com/api/v3/references/thesaurus/json/${word}?key=${process.env.THE}`;
 
 // IIFE called when the command is executed
-(async (urlDic, urlThe, printDef) => {
+(async (urlDic, urlThe, printDef, printAnton, printSynon) => {
   try {
     const responseDif = await axios.get(urlDic);
     const responseThe = await axios.get(urlThe);
@@ -38,8 +38,10 @@ const urlThe = `https://www.dictionaryapi.com/api/v3/references/thesaurus/json/$
     });
     responseThe.data.forEach((element, index) => {
       if (index < NUM && NUM >= 0) {
-        const synon = new Synonym(JSON.stringify(element.meta.syns));
-        const anton = new Antonym(JSON.stringify(element.meta.ants));
+        const synon = new Synonym(element.meta.syns);
+        printSynon(synon);
+        const anton = new Antonym(element.meta.ants);
+        printAnton(anton);
       }
       // fs.writeFile(
       //   `${path.resolve("./")}/syns${index}.json`,
@@ -54,4 +56,4 @@ const urlThe = `https://www.dictionaryapi.com/api/v3/references/thesaurus/json/$
   } catch (e) {
     console.error(e);
   }
-})(urlDic, urlThe, printDef);
+})(urlDic, urlThe, printDef, printAnton, printSynon);
