@@ -36,10 +36,14 @@ const urlThe = `https://www.dictionaryapi.com/api/v3/references/thesaurus/json/$
     if (responseThe) {
       responseThe.data.forEach((element, index) => {
         if (index < NUM && NUM >= 0) {
-          const synon = new Synonym(element.meta.syns);
-          printSynon(synon);
-          const anton = new Antonym(element.meta.ants);
-          printAnton(anton);
+          if (element.meta.hasOwnProperty("syns")) {
+            const synon = new Synonym(element.meta.syns);
+            printSynon(synon);
+          }
+          if (element.meta.hasOwnProperty("ants")) {
+            const anton = new Antonym(element.meta.ants);
+            printAnton(anton);
+          }
         }
       });
     }
