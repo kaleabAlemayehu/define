@@ -26,7 +26,7 @@ if you have ssh auth on github
 git clone git@github.com:kaleabAlemayehu/define.git
 ```
 
-### Initilize the project
+### Install all dependencies of the project
 
 ```bash
 npm i
